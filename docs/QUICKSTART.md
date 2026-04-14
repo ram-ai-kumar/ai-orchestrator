@@ -45,6 +45,31 @@ You should see all required models listed:
 
 ## Usage
 
+### Rules System
+
+AI Orchestrator includes a configurable rules system that enforces enterprise policies based on git branch:
+
+- **Production branches** (main, develop, release/\*): All mandatory + optional rules applied
+- **Development branches** (feature/_, hotfix/_, bugfix/\*): Only mandatory rules applied
+
+**Mandatory Rules (always applied):**
+
+- Zero-Trust Policy
+- SaaS Architecture Policy
+- DPDPA Compliance
+- Data Persistence Patterns
+- Clean Code Standards
+
+**Optional Rules (branch-dependent):**
+
+- HIPAA Compliance
+- SOC2 Compliance
+- ISO27001 Compliance
+- Backend/Architecture Patterns
+- Language Patterns (Python, Ruby, TypeScript, Go)
+
+The system auto-detects your project type and recommends appropriate optional rules. Configure rules in `config/rules.yaml`.
+
 ### Run the Orchestrator
 
 ```bash

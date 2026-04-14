@@ -47,6 +47,7 @@ For detailed risk and compliance information, see [docs/RISK_COMPLIANCE.md](docs
 ## Documentation
 
 - [Quick Start](docs/QUICKSTART.md) - Installation and usage guide
+- [Usage Guide](docs/USAGE.md) - Agentic video engineering development workflow
 - [Architecture](docs/ARCHITECTURE.md) - System architecture and design decisions
 - [Security](docs/SECURITY.md) - Security controls and ZTA implementation
 - [Risk & Compliance](docs/RISK_COMPLIANCE.md) - Risk assessment and compliance frameworks
