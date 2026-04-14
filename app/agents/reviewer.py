@@ -1,10 +1,10 @@
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 from app.core.state import AgentState
 from app.llm.prompt_builder import PromptBuilder
 
 
 def reviewer_node(state: AgentState) -> AgentState:
-    llm = Ollama(model="deepseek-r1")
+    llm = OllamaLLM(model="deepseek-r1")
 
     # Build system prompt with active rules
     prompt_builder = PromptBuilder()

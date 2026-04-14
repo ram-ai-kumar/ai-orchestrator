@@ -1,10 +1,10 @@
-from langchain_community.llms import Ollama
+from langchain_ollama import OllamaLLM
 from app.core.state import AgentState
 from app.llm.prompt_builder import PromptBuilder
 
 
 def planner_node(state: AgentState) -> AgentState:
-    llm = Ollama(model="qwen3.5")
+    llm = OllamaLLM(model="qwen3.5")
 
     # Build system prompt with active rules
     prompt_builder = PromptBuilder()
