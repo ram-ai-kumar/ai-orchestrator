@@ -1,6 +1,6 @@
-# Usage Guide - Agentic Video Engineering Development
+# Usage Guide - Agentic Vibe Engineering Development
 
-This guide provides detailed steps for using AI Orchestrator for local agentic video engineering development workflows.
+This guide provides detailed steps for using AI Orchestrator for local agentic vibe engineering development workflows.
 
 ## Overview
 
