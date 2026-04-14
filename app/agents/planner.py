@@ -1,24 +1,47 @@
 from langchain_community.llms import Ollama
 from app.core.state import AgentState
+from app.llm.prompt_builder import PromptBuilder
 
 
 def planner_node(state: AgentState) -> AgentState:
     llm = Ollama(model="qwen3.5")
 
+    # Build system prompt with active rules
+    prompt_builder = PromptBuilder()
+    system_prompt = prompt_builder.build_system_prompt(state.get("active_rules", []))
+
     prompt = f"""
-You are a senior software architect.
+{system_prompt}
 
-Break the following task into clear, actionable coding steps.
+You are a senior software architect and task planner.
 
-Task:
+Your job is to convert a user request into a sequence of small, precise, executable coding steps.
+
+INPUT TASK:
 {state["task"]}
 
-Rules:
-- Keep steps small and precise
-- Each step should be executable independently
-- Focus on code changes
+RULES:
+- Break into 3–7 steps maximum
+- Each step must be independently executable
+- Each step must involve a concrete code action
+- Avoid vague steps like "improve" or "optimize"
+- Prefer file-level or function-level actions
+- Respect existing architecture unless explicitly told otherwise
 
-Return ONLY numbered steps.
+CONSTRAINTS:
+- Do NOT write code
+- Do NOT explain reasoning
+- Do NOT repeat the task
+
+OUTPUT FORMAT (STRICT):
+1. <step>
+2. <step>
+3. <step>
+
+EXAMPLE:
+1. Identify the function handling authentication in auth.py
+2. Refactor the function to extract validation logic into a separate helper
+3. Update unit tests to cover the new helper function
 """
 
     response = llm.invoke(prompt)

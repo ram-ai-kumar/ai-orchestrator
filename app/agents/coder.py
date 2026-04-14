@@ -1,15 +1,22 @@
 from langchain_community.llms import Ollama
 from app.core.state import AgentState
+from app.llm.prompt_builder import PromptBuilder
 
 
 def coder_node(state: AgentState) -> AgentState:
     llm = Ollama(model="qwen2.5-coder")
+
+    # Build system prompt with active rules
+    prompt_builder = PromptBuilder()
+    system_prompt = prompt_builder.build_system_prompt(state.get("active_rules", []))
 
     step = state["plan"][state["current_step"]]
 
     context_block = "\n\n".join(state.get("context", []))
 
     prompt = f"""
+{system_prompt}
+
 You are an expert software engineer.
 
 Current task step:
@@ -18,7 +25,7 @@ Current task step:
 Relevant context:
 {context_block}
 
-Rules:
+RULES:
 - Generate ONLY a valid git diff patch
 - Do NOT explain anything
 - Do NOT output full files

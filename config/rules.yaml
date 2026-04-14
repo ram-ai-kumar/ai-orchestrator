@@ -1,0 +1,40 @@
+# Branch classification
+branch_settings:
+  production_branches:
+    - main
+    - develop
+    - release/*
+
+# Mandatory rules (always applied, cannot be disabled)
+mandatory:
+  - 00-zero-trust-policy
+  - 01-saas-architecture-policy
+  - 02-dpdpa-compliance
+  - 12-data-persistence-patterns
+  - 20-clean-code-standards
+
+# Optional rules (user-configurable)
+optional:
+  # Security compliance
+  03-hipaa-compliance: false
+  04-soc2-compliance: false
+  05-iso27001-compliance: false
+
+  # Architecture patterns
+  10-backend-patterns: auto
+  11-frontend-patterns: auto
+
+  # Language patterns
+  21-ruby-rails-patterns: auto
+  22-python-patterns: auto
+  23-typescript-patterns: auto
+  24-go-patterns: auto
+
+# Auto-detection settings
+auto_detect:
+  python: [requirements.txt, pyproject.toml, setup.py]
+  ruby: [Gemfile, Gemfile.lock]
+  typescript: [package.json, tsconfig.json]
+  go: [go.mod, go.sum]
+  backend: [requirements.txt, Gemfile, go.mod]
+  frontend: [package.json, tsconfig.json]

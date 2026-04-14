@@ -1,45 +1,74 @@
 from langchain_community.llms import Ollama
 from app.core.state import AgentState
+from app.llm.prompt_builder import PromptBuilder
 
 
 def reviewer_node(state: AgentState) -> AgentState:
     llm = Ollama(model="deepseek-r1")
 
+    # Build system prompt with active rules
+    prompt_builder = PromptBuilder()
+    system_prompt = prompt_builder.build_system_prompt(state.get("active_rules", []))
+
     prompt = f"""
-You are a strict senior code reviewer.
+{system_prompt}
 
-Review this patch:
+You are a strict senior code reviewer enforcing production quality.
 
+PATCH:
 {state["patch"]}
 
-Check:
-- correctness
-- edge cases
-- security risks
-- completeness
+CHECK THE FOLLOWING:
 
-Respond ONLY in this format:
+1. Correctness
+- Does the change achieve the intended goal?
+- Are there logical errors?
+
+2. Safety
+- Any security risks?
+- Any unsafe assumptions?
+
+3. Scope
+- Are changes minimal?
+- Any unrelated modifications?
+
+4. Robustness
+- Edge cases handled?
+- Null/empty handling?
+
+5. Maintainability
+- Readability preserved?
+- No unnecessary complexity?
+
+DECISION RULES:
+
+APPROVE if:
+- Change is correct, safe, and minimal
+
+REJECT if:
+- Any correctness issue
+- Any unnecessary change
+- Any unclear behavior
+
+OUTPUT FORMAT (STRICT):
 
 APPROVED
 
 OR
 
-REJECTED: <reason>
+REJECTED: <clear, specific reason>
 """
 
-    response = llm.invoke(prompt)
+    response = llm.invoke(prompt).strip()
 
-    state["review"] = response
-    state["approved"] = "APPROVED" in response
-
-    if state["approved"]:
-        state["logs"].append("Reviewer approved patch")
-        # Advance to next step if approved and more steps remain
-        if state["current_step"] < len(state["plan"]) - 1:
-            state["current_step"] += 1
-            state["approved"] = False  # Reset for next iteration
-            state["logs"].append(f"Advancing to step {state['current_step']}")
+    if response.startswith("APPROVED"):
+        state["approved"] = True
+        state["review"] = "Approved"
+        state["current_step"] += 1
     else:
-        state["logs"].append("Reviewer rejected patch")
+        state["approved"] = False
+        state["review"] = response
+
+    state["logs"].append(f"Reviewer: {state['review']}")
 
     return state

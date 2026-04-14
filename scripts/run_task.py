@@ -1,6 +1,11 @@
 from app.core.graph import build_graph
+from app.llm.rule_selector import RuleSelector
 
 if __name__ == "__main__":
+    # Select rules based on config and auto-detection
+    selector = RuleSelector(project_path=".")
+    active_rules = selector.select_rules_interactively(accept_defaults=True)
+
     graph = build_graph()
 
     task = input("Enter task: ")
@@ -13,7 +18,8 @@ if __name__ == "__main__":
         "patch": None,
         "review": None,
         "approved": False,
-        "logs": []
+        "logs": [],
+        "active_rules": active_rules
     })
 
     print("\n=== FINAL RESULT ===\n")

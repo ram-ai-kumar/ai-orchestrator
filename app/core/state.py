@@ -21,3 +21,6 @@ class AgentState(TypedDict):
 
     # Debug
     logs: List[str]
+
+    # Rules
+    active_rules: List[str]
